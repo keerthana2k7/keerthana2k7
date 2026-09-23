@@ -187,15 +187,8 @@ Academic & Research Implementation (Local codebase / In review)
 ## Connect
 
 <div align="center">
-  <a href="https://www.linkedin.com/in/keerthana-r/" target="_blank">
-    <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" />
-  </a>
-  &nbsp;&nbsp;
-  <a href="mailto:keerthana.rajvanitha@gmail.com">
-    <img src="https://img.shields.io/badge/Email-0A101F?style=for-the-badge&logo=gmail&logoColor=10B981&labelColor=0A101F" alt="Email" />
-  </a>
-  &nbsp;&nbsp;
-  <a href="https://github.com/keerthana2k7" target="_blank">
-    <img src="https://img.shields.io/badge/GitHub-0A101F?style=for-the-badge&logo=github&logoColor=22D3EE&labelColor=0A101F" alt="GitHub" />
-  </a>
+  <a href="https://www.linkedin.com/in/keerthana-rajendran357" target="_blank"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" /></a>&nbsp;
+  <a href="mailto:keerthanarajendran.vanitha@gmail.com"><img src="https://img.shields.io/badge/Email-0A101F?style=for-the-badge&logo=gmail&logoColor=10B981&labelColor=0A101F" alt="Email" /></a>&nbsp;
+  <a href="https://github.com/keerthana2k7" target="_blank"><img src="https://img.shields.io/badge/GitHub-0A101F?style=for-the-badge&logo=github&logoColor=22D3EE&labelColor=0A101F" alt="GitHub" /></a>&nbsp;
+  <a href="https://leetcode.com/u/keerthana_357/" target="_blank"><img src="https://img.shields.io/badge/LeetCode-FFA116?style=for-the-badge&logo=leetcode&logoColor=white" alt="LeetCode" /></a>
 </div>

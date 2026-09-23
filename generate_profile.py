@@ -381,6 +381,8 @@ text { font-family: 'JetBrains Mono', monospace; }
 .lbl { font-size: 14px; font-weight: 500; }
 .val { font-size: 14px; font-weight: 600; }
 .leader { font-size: 14px; fill: ''' + col_leader + '''; letter-spacing: 3px; }
+a { text-decoration: none; cursor: pointer; }
+a:hover text.val { text-decoration: underline; fill: ''' + col_chrome + '''; }
 </style>''')
         svg.append('</defs>')
         
@@ -495,22 +497,22 @@ text { font-family: 'JetBrains Mono', monospace; }
         svg.append(f'<text x="{live_cx+12}" y="{live_cy+4}" class="live-txt">LIVE</text>')
         
         rows_data = [
-            ("Subject", "Keerthana R", col_text_primary),
-            ("Role", "Software Dev Intern | Full Stack", col_accent),
-            ("Origin", "Erode, Tamil Nadu, India", col_text_primary),
-            ("Education", "B.E. CSE, 2028 | Kongu Engg College", col_text_primary),
-            ("Status", "Building + Learning + Shipping", col_accent),
-            ("ToolChain", "VS Code, Git, Docker, DBeaver", col_text_muted),
-            ("Core.Lang", "Java, C++, Python, JavaScript", col_text_primary),
-            ("Core.Frontend", "React, Bootstrap, HTML5, CSS3", col_text_primary),
-            ("Core.Backend", "Java (OOP, Spring), REST APIs", col_text_primary),
-            ("Core.Database", "MySQL, DBeaver, Schema Design", col_text_primary),
-            ("Core.Infra", "Docker, GitHub Actions, Linux", col_text_primary),
-            ("Grid.Mail", "keerthana.rajvanitha@gmail.com", col_chrome),
-            ("Grid.Portfolio", "github.com/keerthana2k7", col_chrome),
-            ("Grid.LinkedIn", "linkedin.com/in/keerthana-r", col_chrome),
-            ("Grid.GitHub", "github.com/keerthana2k7", col_chrome),
-            ("Grid.Community", "Tamil Nadu Java User Group (TNJUG)", col_accent),
+            ("Subject", "Keerthana R", col_text_primary, None),
+            ("Role", "Software Dev Intern | Full Stack", col_accent, None),
+            ("Origin", "Erode, Tamil Nadu, India", col_text_primary, None),
+            ("Education", "B.E. CSE, 2028 | Kongu Engg College", col_text_primary, None),
+            ("Status", "Building + Learning + Shipping", col_accent, None),
+            ("ToolChain", "VS Code, Git, Docker, DBeaver", col_text_muted, None),
+            ("Core.Lang", "Java, C++, Python, JavaScript", col_text_primary, None),
+            ("Core.Frontend", "React, Bootstrap, HTML5, CSS3", col_text_primary, None),
+            ("Core.Backend", "Java (OOP, Spring), REST APIs", col_text_primary, None),
+            ("Core.Database", "MySQL, DBeaver, Schema Design", col_text_primary, None),
+            ("Core.Infra", "Docker, GitHub Actions, Linux", col_text_primary, None),
+            ("Grid.Mail", "keerthanarajendran.vanitha@gmail.com", col_chrome, "mailto:keerthanarajendran.vanitha@gmail.com"),
+            ("Grid.LinkedIn", "linkedin.com/in/keerthana-rajendran357", col_chrome, "https://www.linkedin.com/in/keerthana-rajendran357"),
+            ("Grid.GitHub", "github.com/keerthana2k7", col_chrome, "https://github.com/keerthana2k7"),
+            ("Grid.LeetCode", "leetcode.com/u/keerthana_357", col_chrome, "https://leetcode.com/u/keerthana_357/"),
+            ("Grid.Community", "Tamil Nadu Java User Group (TNJUG)", col_accent, None),
         ]
         
         row_y_start = ry_start + 65
@@ -521,7 +523,7 @@ text { font-family: 'JetBrains Mono', monospace; }
         leader_start_x = label_x + label_w + 10
         leader_end_x = value_x_end - 10
         
-        for idx, (label, val, val_col) in enumerate(rows_data):
+        for idx, (label, val, val_col, href) in enumerate(rows_data):
             curr_y = row_y_start + idx * row_spacing
             
             # Label
@@ -538,8 +540,11 @@ text { font-family: 'JetBrains Mono', monospace; }
                 leader_dots = ". " * (dots_count // 2)
                 svg.append(f'<text x="{leader_start_x}" y="{curr_y}" class="leader" textLength="{lead_w}" lengthAdjust="spacingAndGlyphs">{leader_dots}</text>')
                 
-            # Value
-            svg.append(f'<text x="{val_x}" y="{curr_y}" class="val" fill="{val_col}" textLength="{val_pixel_len}" lengthAdjust="spacingAndGlyphs">{val}</text>')
+            # Value (clickable hyperlink if href provided)
+            if href:
+                svg.append(f'<a href="{href}" target="_blank"><text x="{val_x}" y="{curr_y}" class="val" fill="{val_col}" textLength="{val_pixel_len}" lengthAdjust="spacingAndGlyphs">{val}</text></a>')
+            else:
+                svg.append(f'<text x="{val_x}" y="{curr_y}" class="val" fill="{val_col}" textLength="{val_pixel_len}" lengthAdjust="spacingAndGlyphs">{val}</text>')
 
         # Terminal status footer line inside system.info
         footer_y = ry_start + rh - 16
