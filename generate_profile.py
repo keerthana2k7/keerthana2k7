@@ -14,7 +14,7 @@ def main():
     print("=== GitHub Profile Banner Generator ===")
     
     workspace_dir = os.path.dirname(os.path.abspath(__file__))
-    img_path = os.path.join(workspace_dir, "assets", "WhatsApp Image 2026-02-12 at 1.32.35 PM.jpeg")
+    img_path = os.path.join(workspace_dir, "assets", "profile.jpg")
     
     if not os.path.exists(img_path):
         print(f"Error: Image not found at {img_path}")
@@ -28,28 +28,27 @@ def main():
     # 1. Framing & Preprocessing
     # -------------------------------------------------------------
     print("Step 1: Framing head & shoulders (300x340)...")
-    crop_top = int(h_orig * 0.12)
-    crop_bottom = int(h_orig * 0.72)
+    crop_top = int(h_orig * 0.08)
+    crop_bottom = int(h_orig * 0.75)
     crop_h = crop_bottom - crop_top
     crop_w = int(crop_h * (300.0 / 340.0))
-    crop_left = int((w_orig - crop_w) / 2) + 20
+    crop_left = int((w_orig - crop_w) / 2)
     crop_right = crop_left + crop_w
     
     cropped = im.crop((crop_left, crop_top, crop_right, crop_bottom))
     resized = cropped.resize((300, 340), Image.Resampling.LANCZOS)
     
-    # Background segmentation for dark mode
+    # Background segmentation
     arr_rgb = np.array(resized).astype(np.float32)
-    bg_corners = np.concatenate([
-        arr_rgb[:30, :30].reshape(-1, 3),
-        arr_rgb[:30, -30:].reshape(-1, 3)
-    ], axis=0)
-    bg_color = np.median(bg_corners, axis=0)
-    color_dist = np.linalg.norm(arr_rgb - bg_color, axis=-1)
+    bg_top_left = arr_rgb[:20, :30].reshape(-1, 3)
+    bg_top_right = arr_rgb[:20, -30:].reshape(-1, 3)
+    bg_samples = np.vstack([bg_top_left, bg_top_right])
+    mean_bg = np.mean(bg_samples, axis=0)
     
-    subject_mask = (color_dist > 32.0)
-    # Morphological closing & fill holes & largest component
-    subject_mask = ndimage.binary_closing(subject_mask, structure=np.ones((5,5)))
+    color_dist = np.linalg.norm(arr_rgb - mean_bg, axis=-1)
+    subject_mask = (color_dist > 35.0)
+    subject_mask = ndimage.binary_opening(subject_mask, structure=np.ones((3,3)))
+    subject_mask = ndimage.binary_closing(subject_mask, structure=np.ones((7,7)))
     subject_mask = ndimage.binary_fill_holes(subject_mask)
     labeled, num_features = ndimage.label(subject_mask)
     if num_features > 0:
@@ -57,10 +56,10 @@ def main():
         largest = np.argmax(sizes) + 1
         subject_mask = (labeled == largest)
         
-    # Contrast 1.3x, autocontrast(cutoff=1) + UnsharpMask(radius=3, percent=140)
+    # Contrast 1.25x, autocontrast(cutoff=1) + UnsharpMask(radius=2, percent=130)
     gray = ImageOps.autocontrast(resized.convert('L'), cutoff=1)
-    contrast_img = ImageEnhance.Contrast(gray).enhance(1.3)
-    preprocessed = contrast_img.filter(ImageFilter.UnsharpMask(radius=3, percent=140))
+    contrast_img = ImageEnhance.Contrast(gray).enhance(1.25)
+    preprocessed = contrast_img.filter(ImageFilter.UnsharpMask(radius=2, percent=130))
     img_arr = np.array(preprocessed, dtype=np.float32)
     
     # -------------------------------------------------------------
@@ -105,7 +104,7 @@ def main():
         return output
         
     dark_dots = run_dither(img_arr, mask=subject_mask, invert=False)
-    light_dots = run_dither(img_arr, mask=None, invert=True)
+    light_dots = run_dither(img_arr, mask=subject_mask, invert=True)
     
     print(f"Dark mode dot count: {np.sum(dark_dots)}")
     print(f"Light mode dot count: {np.sum(light_dots)}")
