@@ -38,23 +38,19 @@ def main():
     cropped = im.crop((crop_left, crop_top, crop_right, crop_bottom))
     resized = cropped.resize((300, 340), Image.Resampling.LANCZOS)
     
-    # Background segmentation
+    # High-precision background extraction (eliminates wall shadows and side artifacts):
     arr_rgb = np.array(resized).astype(np.float32)
-    bg_top_left = arr_rgb[:20, :30].reshape(-1, 3)
-    bg_top_right = arr_rgb[:20, -30:].reshape(-1, 3)
-    bg_samples = np.vstack([bg_top_left, bg_top_right])
-    mean_bg = np.mean(bg_samples, axis=0)
+    grays = np.mean(arr_rgb, axis=-1)
+    diffs = np.max(arr_rgb, axis=-1) - np.min(arr_rgb, axis=-1)
+    is_wall = (grays > 150.0) & (diffs < 12.0)
     
-    color_dist = np.linalg.norm(arr_rgb - mean_bg, axis=-1)
-    subject_mask = (color_dist > 35.0)
-    subject_mask = ndimage.binary_opening(subject_mask, structure=np.ones((3,3)))
-    subject_mask = ndimage.binary_closing(subject_mask, structure=np.ones((7,7)))
+    labeled_bg, num_bg = ndimage.label(is_wall)
+    border_labels = set(labeled_bg[0, :]).union(set(labeled_bg[:, 0])).union(set(labeled_bg[:, -1]))
+    border_labels.discard(0)
+    true_bg = np.isin(labeled_bg, list(border_labels))
+    
+    subject_mask = ~true_bg
     subject_mask = ndimage.binary_fill_holes(subject_mask)
-    labeled, num_features = ndimage.label(subject_mask)
-    if num_features > 0:
-        sizes = ndimage.sum(subject_mask, labeled, range(1, num_features + 1))
-        largest = np.argmax(sizes) + 1
-        subject_mask = (labeled == largest)
         
     # Contrast 1.25x, autocontrast(cutoff=1) + UnsharpMask(radius=2, percent=130)
     gray = ImageOps.autocontrast(resized.convert('L'), cutoff=1)
