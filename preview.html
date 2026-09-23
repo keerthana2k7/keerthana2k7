@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GitHub Profile Banner Preview</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 40px;
+      background: #050811;
+      color: #fff;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+    h2 {
+      margin-bottom: 8px;
+      color: #22D3EE;
+    }
+    .banner-container {
+      width: 1180px;
+      max-width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <h2>Dark Mode Banner (dark.svg)</h2>
+    <div class="banner-container">
+      <img src="dark.svg" alt="Dark Mode Banner" />
+    </div>
+  </div>
+  <div>
+    <h2 style="color: #0891B2;">Light Mode Banner (light.svg)</h2>
+    <div class="banner-container" style="background: #ffffff; padding: 20px;">
+      <img src="light.svg" alt="Light Mode Banner" />
+    </div>
+  </div>
+</body>
+</html>
